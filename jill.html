@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+<title>Valentine for Jillan</title>
+
+<style>
+:root{
+  --bg1:#ffdde1;
+  --bg2:#ee9ca7;
+  --card:#ffffffcc;
+  --yes:#ff4d6d;
+  --yes2:#ff758f;
+  --text:#1f1f1f;
+}
+
+*{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+
+body{
+  margin:0;
+  font-family: system-ui, sans-serif;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  overflow:hidden;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:var(--text);
+}
+
+/* ambient glow blobs */
+.blob{
+  position:absolute;
+  width:340px; height:340px;
+  border-radius:50%;
+  filter:blur(70px);
+  opacity:.35;
+  animation: blobFloat 9s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+.blob.one{ background:#ffffff; top:-120px; left:-120px; }
+.blob.two{ background:#ff6b86; bottom:-140px; right:-140px; animation-delay:2s; }
+
+@keyframes blobFloat{
+  from{ transform: translate(0,0) scale(1); }
+  to{ transform: translate(30px,20px) scale(1.08); }
+}
+
+/* floating hearts */
+.heart{
+  position:absolute;
+  bottom:-40px;
+  font-size:18px;
+  opacity:.65;
+  animation: floatUp linear forwards;
+  user-select:none;
+  pointer-events:none;
+  filter: drop-shadow(0 8px 14px rgba(0,0,0,.14));
+}
+@keyframes floatUp{
+  from{ transform: translateY(0) translateX(0) rotate(0deg); opacity:0; }
+  15%{ opacity:.65; }
+  to{ transform: translateY(-120vh) translateX(70px) rotate(250deg); opacity:0; }
+}
+
+/* Card */
+.card{
+  width:100%;
+  max-width:420px;
+  padding:22px 18px;
+  border-radius:20px;
+  background:var(--card);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 18px 50px rgba(0,0,0,.18);
+  text-align:center;
+  position:relative;
+  animation: breathe 4.2s ease-in-out infinite;
+}
+@keyframes breathe{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-4px); }
+}
+
+h1{
+  font-size:clamp(20px, 6vw, 28px);
+  margin:0 0 10px;
+  line-height:1.15;
+}
+
+p{
+  margin:0 0 14px;
+  font-size:clamp(13px, 4vw, 16px);
+  line-height:1.45;
+}
+
+/* typewriter line */
+.type{
+  min-height:22px;
+  font-size:13px;
+  opacity:.85;
+  margin-bottom:8px;
+}
+
+/* GIFs */
+.main-gif{
+  width:min(220px, 85%);
+  height:auto;
+  margin:12px auto 16px;
+  border-radius:12px;
+  display:block;
+  box-shadow:0 8px 20px rgba(0,0,0,.18);
+}
+
+/* Buttons */
+.buttons{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:6px;
+  position:relative;
+}
+
+button{
+  border:0;
+  padding:14px 16px;
+  border-radius:16px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  transition: transform .12s ease;
+}
+button:active{ transform: scale(.98); }
+
+#yesBtn{
+  background: linear-gradient(135deg, var(--yes), var(--yes2));
+  color:white;
+  box-shadow:0 10px 22px rgba(255,77,109,.28);
+  animation: yesPulse 2.2s ease-in-out infinite;
+}
+@keyframes yesPulse{
+  0%,100%{ transform: scale(1); }
+  50%{ transform: scale(1.03); }
+}
+
+#noBtn{
+  background:#e6e6e6;
+  color:#222;
+}
+
+/* Modal */
+.overlay{
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,.45);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.modal{
+  width:min(420px, 94vw);
+  max-height:85vh;
+  overflow:auto;
+  background:white;
+  padding:18px 16px;
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+  transform: translateY(14px) scale(.98);
+  opacity:0;
+  animation: popIn .28s ease forwards;
+}
+@keyframes popIn{
+  to{ transform: translateY(0) scale(1); opacity:1; }
+}
+.modal h2{ margin:0 0 10px; }
+.modal p{
+  font-size:14px;
+  line-height:1.5;
+  margin:0 0 12px;
+}
+.modal-gif{
+  width:min(180px, 70%);
+  height:auto;
+  margin:12px auto 0;
+  border-radius:10px;
+  display:block;
+}
+
+/* Music player */
+.music-player{
+  position:fixed;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(255,255,255,.9);
+  padding:8px 12px;
+  border-radius:999px;
+  box-shadow:0 8px 20px rgba(0,0,0,.18);
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.now-playing{
+  position:relative;
+  overflow:hidden;
+}
+.now-playing::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform: translateX(-120%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.8), transparent);
+  animation: shimmer 2.2s linear infinite;
+}
+@keyframes shimmer{
+  to{ transform: translateX(120%); }
+}
+.music-player button{
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:700;
+  background:#111;
+  color:#fff;
+}
+</style>
+</head>
+
+<body>
+<div class="blob one"></div>
+<div class="blob two"></div>
+
+<div class="card">
+  <h1>Jillan, will you be my Valentine?</h1>
+
+  <div class="type" id="typeLine"></div>
+
+  <p>pag di mo ging yes to tapon ko to</p>
+
+  <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif"
+       alt="cute hearts"
+       class="main-gif">
+
+  <div class="buttons">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">Not yet</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <h2>Yay!! 💞</h2>
+    <p>
+      From the depths of my heart, thank you—for accepting me as I am, for standing by me even in my worst of my life,
+      and for being my unwavering supporter.
+      Your love is my greatest comfort, and your presence, my greatest joy.
+      I love you so much love❤️
+    </p>
+
+    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
+         alt="happy celebration"
+         class="modal-gif">
+
+    <button onclick="closeModal()" style="margin-top:14px;">Close</button>
+  </div>
+</div>
+
+<!-- 🎵 BACKGROUND MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="SpotiDownloader.com - love. - wave to earth.mp3" type="audio/mpeg">
+</audio>
+
+<div class="music-player">
+  <span class="now-playing">🎵 love.</span>
+  <button type="button" onclick="toggleMusic()">Play / Pause</button>
+</div>
+
+<script>
+const overlay = document.getElementById("overlay");
+const music = document.getElementById("bgMusic");
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+
+/* Typewriter (soft) */
+const typeLine = document.getElementById("typeLine");
+const lines = [
+  "a small question, with a big feeling.",
+  "quiet night. warm heart.",
+  "just… you and me."
+];
+let li = 0, ci = 0;
+function type(){
+  const text = lines[li];
+  typeLine.textContent = text.slice(0, ci++);
+  if(ci <= text.length) return setTimeout(type, 35);
+  setTimeout(() => {
+    ci = 0; li = (li + 1) % lines.length;
+    typeLine.textContent = "";
+    type();
+  }, 1200);
+}
+type();
+
+/* Floating hearts generator */
+const heartEmojis = ["💗","💖","💘","💝","💞","💕","💓"];
+function spawnHeart(burst=false){
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.textContent = heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
+  const size = burst ? (18 + Math.random()*18) : (14 + Math.random()*14);
+  h.style.fontSize = size + "px";
+  h.style.left = Math.random()*100 + "vw";
+  h.style.animationDuration = (burst ? (3.8 + Math.random()*2.2) : (6 + Math.random()*6)) + "s";
+  h.style.opacity = burst ? ".9" : ".65";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 12000);
+}
+setInterval(() => spawnHeart(false), 550);
+for(let i=0;i<10;i++) setTimeout(() => spawnHeart(false), i*180);
+
+/* Confetti burst (hearts) */
+function burstHearts(count=16){
+  for(let i=0;i<count;i++){
+    setTimeout(() => spawnHeart(true), i*35);
+  }
+}
+
+/* YES opens modal + burst */
+yesBtn.addEventListener("click", () => {
+  overlay.style.display = "flex";
+  burstHearts(22);
+});
+
+/* NO dodges (desktop + mobile) */
+function dodgeNo(){
+  const x = Math.random() * 170 - 85;
+  const y = Math.random() * 120 - 60;
+  noBtn.style.transform = `translate(${x}px, ${y}px)`;
+}
+noBtn.addEventListener("mouseenter", dodgeNo);
+noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); dodgeNo(); }, { passive:false });
+
+/* Close modal */
+function closeModal(){
+  overlay.style.display = "none";
+}
+
+/* Music toggle */
+function toggleMusic(){
+  if(music.paused) music.play().catch(()=>{});
+  else music.pause();
+}
+
+/* Mobile autoplay rule: start after first tap */
+function tryAutoPlay(){
+  if(music.paused) music.play().catch(()=>{});
+}
+window.addEventListener("touchstart", tryAutoPlay, { once:true });
+window.addEventListener("click", tryAutoPlay, { once:true });
+
+/* Close when tapping outside modal */
+overlay.addEventListener("click", (e) => {
+  if(e.target === overlay) closeModal();
+});
+</script>
+
+</body>
+</html>
